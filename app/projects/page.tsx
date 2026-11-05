@@ -1,8 +1,12 @@
+import ProjectsList from '@/components/ProjectsList';
+
 export default function ProjectsPage() {
-    return (
-        <main>
-            <h1>Projects Overview</h1>
-            <p>Welcome to my projects section!</p>
-        </main>
-    )
+  return (
+    <main>
+      <h1>Projects Overview</h1>
+      <p>Welcome to my projects section!</p>
+
+      <ProjectsList endpoint="/api/projects" />
+    </main>
+  );
 }
