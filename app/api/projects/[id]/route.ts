@@ -16,7 +16,7 @@ export async function GET(
     );
   }
 
-  const project = getProjectById(projectId);
+  const project = await getProjectById(projectId);//consulta PostgreSQL y devuelve respuesta
 
   if (!project) {
     return NextResponse.json(
