@@ -1,25 +1,12 @@
-'use client';
+import { connection } from 'next/server';
+import { getProjects } from '@/lib/projects-db';
 
-import { useEffect, useState } from 'react';
-import type { Project } from '@/lib/projects-db';
+export default async function ProjectsList() {
+  // Esperar a que llegue una solicitud del usuario.
+  await connection();
 
-export default function ProjectsList({
-  endpoint,
-}: {
-  endpoint: string;
-}) {
-  const [projects, setProjects] = useState<Project[]>([]);
-
-  useEffect(() => {
-    async function loadProjects() {
-      const response = await fetch(endpoint);
-      const data: Project[] = await response.json();
-
-      setProjects(data);
-    }
-
-    loadProjects();
-  }, [endpoint]);
+  // Obtener los proyectos directamente desde PostgreSQL.
+  const projects = await getProjects();
 
   return (
     <ul className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
