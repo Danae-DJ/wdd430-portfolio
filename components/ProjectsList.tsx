@@ -1,17 +1,22 @@
+
 import { connection } from 'next/server';
-import { getProjects } from '@/lib/projects-db';
+import { getProjects, type Project } from '@/lib/projects-db';
 
 export default async function ProjectsList({
   type,
+  projects: providedProjects,
 }: {
   type?: string;
+  projects?: Project[];
 }) {
-  // Esperar a que llegue una solicitud del usuario.
-  await connection();
+  let projects = providedProjects;
 
-
-  // Obtener los proyectos directamente desde PostgreSQL. Unicamente los registos correspondientes a type
-  const projects = await getProjects(type);
+  // Si no recibimos proyectos desde la página,
+  // los consultamos directamente en PostgreSQL.
+  if (!projects) {
+    await connection();
+    projects = await getProjects(type);
+  }
 
   return (
     <ul className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
@@ -59,7 +64,12 @@ export default async function ProjectsList({
   );
 }
 
+
 /*
+
+providedProjects permite recibir una lista de proyectos desde otra página.
+Si recibe proyectos, los muestra directamente.
+Si no recibe proyectos, utiliza getProjects(type) como antes
 Clase Tailwind --	Función
 grid --	Organiza las tarjetas en una cuadrícula.
 grid-cols-1 --	Una columna en pantallas pequeñas.
