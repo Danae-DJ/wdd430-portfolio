@@ -1,12 +1,17 @@
 import { connection } from 'next/server';
 import { getProjects } from '@/lib/projects-db';
 
-export default async function ProjectsList() {
+export default async function ProjectsList({
+  type,
+}: {
+  type?: string;
+}) {
   // Esperar a que llegue una solicitud del usuario.
   await connection();
 
-  // Obtener los proyectos directamente desde PostgreSQL.
-  const projects = await getProjects();
+
+  // Obtener los proyectos directamente desde PostgreSQL. Unicamente los registos correspondientes a type
+  const projects = await getProjects(type);
 
   return (
     <ul className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
