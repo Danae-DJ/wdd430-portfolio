@@ -10,6 +10,7 @@ import {
 type SearchParams = Promise<{
   query?: string;
   page?: string;
+  message?: string;
 }>;
 
 export default function ProjectsPage({
@@ -39,6 +40,8 @@ async function ProjectsContent({
   searchParams: SearchParams;
 }) {
   const params = await searchParams;
+  //Enseña un mensaje de eliminacion
+  const showDeleteMessage = params.message === 'deleted';
 
   // Se lee y valida la consulta de búsqueda.
   const rawQuery = typeof params.query === 'string' ? params.query : '';
@@ -60,6 +63,15 @@ async function ProjectsContent({
 
   return (
     <>
+      {showDeleteMessage && (
+        <p
+          role="status"
+          className="bg-green-100 text-green-800 p-3 rounded-md mt-4"
+        >
+          Project deleted successfully.
+        </p>
+      )}
+
       <ProjectsList projects={projects} />
 
       <Pagination

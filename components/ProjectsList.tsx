@@ -1,6 +1,6 @@
-
 import { connection } from 'next/server';
 import { getProjects, type Project } from '@/lib/projects-db';
+import DeleteProject from './DeleteProject';
 
 export default async function ProjectsList({
   type,
@@ -32,6 +32,15 @@ export default async function ProjectsList({
           <h2 className="text-xl font-bold mb-3">
             {project.title}
           </h2>
+
+          <a
+            href={`/projects/${project.id}/edit`}
+            className="rounded-full border border-green-600 bg-white px-2.5 py-0.5 text-sm font-medium text-green-600 hover:bg-green-50 transition-colors"
+          >
+            Edit
+          </a>
+
+          <DeleteProject id={project.id} />
 
           <p className="text-gray-600 mb-5 leading-relaxed">
             {project.description}

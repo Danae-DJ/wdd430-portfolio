@@ -28,6 +28,13 @@ export default function ProjectsLayout({
         >
           School
         </Link>
+
+        <Link
+          href="/projects/create"
+          className="rounded-lg bg-slate-700 px-4 py-2 text-white hover:bg-indigo-700 transition"
+        >
+          Create New Project
+        </Link>
       </nav>
 
       {children}
