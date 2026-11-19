@@ -40,6 +40,7 @@ async function ProjectsContent({
   searchParams: SearchParams;
 }) {
   const params = await searchParams;
+  
   //Enseña un mensaje de eliminacion
   const showDeleteMessage = params.message === 'deleted';
 

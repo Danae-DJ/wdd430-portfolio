@@ -115,11 +115,20 @@ export async function updateProject(
 }
 
 // Deletes an existing project.
+
 export async function deleteProject(id: number) {
-  await sql`
-    DELETE FROM projects
-    WHERE id = ${id}
-  `;
+  try {
+    await sql`
+      DELETE FROM projects
+      WHERE id = ${id}
+    `;
+  } catch (error) {
+    console.error('Error deleting project:', error);
+
+    throw new Error(
+      'Failed to delete project. Please try again later.'
+    );
+  }
 
   // Refresh the projects page.
   revalidatePath('/projects');
@@ -127,6 +136,7 @@ export async function deleteProject(id: number) {
   // Redirect with a success message.
   redirect('/projects?message=deleted');
 }
+
 
 
 
@@ -147,4 +157,8 @@ DELETE FROM projects indica a PostgreSQL que elimine un registro de la tabla.
 WHERE id = ${id} asegura que se elimine únicamente el proyecto correspondiente a ese ID.
 revalidatePath('/projects') actualiza la lista después de eliminarlo.
 La función redirect() devuelve al usuario a /projects y agrega el parámetro message=deleted a la URL.
+try...catch debe capturar el error de la consulta a PostgreSQL.
+revalidatePath() actualiza la información de la página.
+redirect() realiza la navegación. Internamente utiliza un mecanismo de 
+excepción de Next.js, por lo que no conviene atraparlo accidentalmente dentro de nuestro catch.
 */
