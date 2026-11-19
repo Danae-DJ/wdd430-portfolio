@@ -32,11 +32,34 @@ export default function EditProjectForm({
           type="text"
           defaultValue={project.title}
           required
+          aria-describedby="title-error"
           className="w-full border rounded p-2"
         />
-        {state.errors?.title?.map((error) => (
-          <p key={error} className="text-red-600 text-sm">{error}</p>
-        ))}
+        <div id="title-error" aria-live="polite">
+          {state.errors?.title?.map((error) => (
+            <p key={error} className="text-red-600 text-sm">{error}</p>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <label htmlFor="yearCompleted" className="block font-medium mb-1">
+          Year Completed
+        </label>
+        <input
+          id="yearCompleted"
+          name="yearCompleted"
+          type="number"
+          defaultValue={project.year_completed ?? ''}
+          required
+          aria-describedby="yearCompleted-error"
+          className="w-full border rounded p-2"
+        />
+        <div id="yearCompleted-error" aria-live="polite">
+          {state.errors?.yearCompleted?.map((error) => (
+            <p key={error} className="text-red-600 text-sm">{error}</p>
+          ))}
+        </div>
       </div>
 
       <div>
@@ -48,12 +71,15 @@ export default function EditProjectForm({
           name="description"
           defaultValue={project.description}
           required
+          aria-describedby="description-error"
           rows={4}
           className="w-full border rounded p-2"
         />
-        {state.errors?.description?.map((error) => (
-          <p key={error} className="text-red-600 text-sm">{error}</p>
-        ))}
+        <div id="description-error" aria-live="polite">
+          {state.errors?.description?.map((error) => (
+            <p key={error} className="text-red-600 text-sm">{error}</p>
+          ))}
+        </div>
       </div>
 
       <div>
@@ -65,14 +91,17 @@ export default function EditProjectForm({
           name="type"
           defaultValue={project.type}
           required
+          aria-describedby="type-error"
           className="w-full border rounded p-2"
         >
           <option value="school">School</option>
           <option value="opensource">Open Source</option>
         </select>
-        {state.errors?.type?.map((error) => (
-          <p key={error} className="text-red-600 text-sm">{error}</p>
-        ))}
+        <div id="type-error" aria-live="polite">
+          {state.errors?.type?.map((error) => (
+            <p key={error} className="text-red-600 text-sm">{error}</p>
+          ))}
+        </div>
       </div>
 
       <div>
@@ -85,11 +114,14 @@ export default function EditProjectForm({
           type="text"
           defaultValue={project.technologies.join(', ')}
           required
+          aria-describedby="technologies-error"
           className="w-full border rounded p-2"
         />
-        {state.errors?.technologies?.map((error) => (
-          <p key={error} className="text-red-600 text-sm">{error}</p>
-        ))}
+        <div id="technologies-error" aria-live="polite">
+          {state.errors?.technologies?.map((error) => (
+            <p key={error} className="text-red-600 text-sm">{error}</p>
+          ))}
+        </div>
       </div>
 
       <div>
@@ -100,12 +132,15 @@ export default function EditProjectForm({
           id="link"
           name="link"
           type="url"
+          aria-describedby="link-error"
           defaultValue={project.link ?? ''}
           className="w-full border rounded p-2"
         />
-        {state.errors?.link?.map((error) => (
-          <p key={error} className="text-red-600 text-sm">{error}</p>
-        ))}
+        <div id="link-error" aria-live="polite">
+          {state.errors?.link?.map((error) => (
+            <p key={error} className="text-red-600 text-sm">{error}</p>
+          ))}
+        </div>
       </div>
 
       <button

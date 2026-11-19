@@ -8,6 +8,7 @@ import { redirect } from 'next/navigation';
 type ProjectFormState = {
   errors?: {
     title?: string[];
+    yearCompleted?: string[];
     description?: string[];
     type?: string[];
     technologies?: string[];
@@ -19,6 +20,11 @@ type ProjectFormState = {
 // Define las reglas para validar un proyecto.
 const ProjectSchema = z.object({
   title: z.string().trim().min(1, 'Title is required'),
+  yearCompleted: z.string().trim().min(1, 'Year completed is required').regex(/^\d{4}$/, 'Enter a valid four-digit year').transform(Number)
+  .refine(
+    (year) => year >= 1900 && year <= new Date().getFullYear(),
+    'Enter a year between 1900 and the current year'
+  ),
   description: z.string().trim().min(1, 'Description is required'),
   type: z.enum(['opensource', 'school']),
   technologies: z.string().trim().min(1, 'Technologies are required')
@@ -33,13 +39,14 @@ export async function createProject(
   prevState: ProjectFormState,
   formData: FormData
     ): Promise<ProjectFormState> {
-    const validatedFields = ProjectSchema.safeParse({
-        title: formData.get('title'),
-        description: formData.get('description'),
-        type: formData.get('type'),
-        technologies: formData.get('technologies'),
-        link: formData.get('link'),
-    });
+      const validatedFields = ProjectSchema.safeParse({
+          title: formData.get('title'),
+          yearCompleted: formData.get('yearCompleted'),
+          description: formData.get('description'),
+          type: formData.get('type'),
+          technologies: formData.get('technologies'),
+          link: formData.get('link'),
+      });
 
     // Stop if the data is invalid.
     if (!validatedFields.success) {
@@ -49,14 +56,21 @@ export async function createProject(
         };
     }
 
-    const { title, description, type, technologies, link } =
-        validatedFields.data;
+    const {
+      title,
+      yearCompleted,
+      description,
+      type,
+      technologies,
+      link,
+    } = validatedFields.data;
 
     // Insert the new project into the database.
     await sql`
-        INSERT INTO projects (title, description, type, technologies, link)
+        INSERT INTO projects (title, year_completed, description, type, technologies, link)
         VALUES (
             ${title},
+            ${yearCompleted},
             ${description},
             ${type},
             ${`{${technologies.join(',')}}`}::text[],
@@ -67,7 +81,8 @@ export async function createProject(
   // Refresh the projects page.
   revalidatePath('/projects');
 
-  return { message: 'Project created successfully.' };
+  // Redirect to the projects page.
+  redirect('/projects');
 }
 
 
@@ -79,6 +94,7 @@ export async function updateProject(
 ): Promise<ProjectFormState> {
   const validatedFields = ProjectSchema.safeParse({
     title: formData.get('title'),
+    yearCompleted: formData.get('yearCompleted'),
     description: formData.get('description'),
     type: formData.get('type'),
     technologies: formData.get('technologies'),
@@ -93,7 +109,7 @@ export async function updateProject(
     };
   }
 
-  const { title, description, type, technologies, link } =
+  const { title, yearCompleted, description, type, technologies, link } =
     validatedFields.data;
 
   // Update the project in the database.
@@ -101,6 +117,7 @@ export async function updateProject(
     UPDATE projects
     SET
       title = ${title},
+      year_completed = ${yearCompleted},
       description = ${description},
       type = ${type},
       technologies = ${`{${technologies.join(',')}}`}::text[],
@@ -161,4 +178,11 @@ try...catch debe capturar el error de la consulta a PostgreSQL.
 revalidatePath() actualiza la información de la página.
 redirect() realiza la navegación. Internamente utiliza un mecanismo de 
 excepción de Next.js, por lo que no conviene atraparlo accidentalmente dentro de nuestro catch.
+
+Cuando se agregó yearCompleted: a ProjectSchema, sus comandos definian su información como:
+z.string(): recibe el valor del formulario.
+min(1): evita que esté vacío.
+regex: exige cuatro dígitos.
+transform(Number): convierte el texto, por ejemplo "2025", en el número 2025.
+refine: comprueba que el año sea razonable y no sea futuro.
 */

@@ -7,6 +7,7 @@ export interface Project {
   type: 'opensource' | 'school';
   technologies: string[];
   link?: string;
+  year_completed: number | null;
 }
 
 export const ITEMS_PER_PAGE = 6; //6 projects by page

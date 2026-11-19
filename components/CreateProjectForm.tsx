@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useActionState } from 'react';
@@ -25,11 +24,33 @@ export default function CreateProjectForm() {
           name="title"
           type="text"
           required
+          aria-describedby="title-error"
           className="w-full border rounded p-2"
         />
-        {state.errors?.title?.map((error) => (
+        <div id="title-error" aria-live="polite">
+          {state.errors?.title?.map((error) => (
+            <p key={error} className="text-red-600 text-sm">{error}</p>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <label htmlFor="yearCompleted" className="block font-medium mb-1">
+          Year Completed
+        </label>
+        <input
+          id="yearCompleted"
+          name="yearCompleted"
+          type="number"
+          required
+          aria-describedby="yearCompleted-error"
+          className="w-full border rounded p-2"
+        />
+        <div id="yearCompleted-error" aria-live="polite">
+        {state.errors?.yearCompleted?.map((error) => (
           <p key={error} className="text-red-600 text-sm">{error}</p>
         ))}
+        </div>
       </div>
 
       <div>
@@ -40,12 +61,15 @@ export default function CreateProjectForm() {
           id="description"
           name="description"
           required
+          aria-describedby="description-error"
           rows={4}
           className="w-full border rounded p-2"
         />
-        {state.errors?.description?.map((error) => (
-          <p key={error} className="text-red-600 text-sm">{error}</p>
-        ))}
+        <div id="description-error" aria-live="polite">
+          {state.errors?.description?.map((error) => (
+            <p key={error} className="text-red-600 text-sm">{error}</p>
+          ))}
+        </div>
       </div>
 
       <div>
@@ -56,14 +80,17 @@ export default function CreateProjectForm() {
           id="type"
           name="type"
           required
+          aria-describedby="type-error"
           className="w-full border rounded p-2"
         >
           <option value="school">School</option>
           <option value="opensource">Open Source</option>
         </select>
-        {state.errors?.type?.map((error) => (
-          <p key={error} className="text-red-600 text-sm">{error}</p>
-        ))}
+        <div id="type-error" aria-live="polite">
+          {state.errors?.type?.map((error) => (
+            <p key={error} className="text-red-600 text-sm">{error}</p>
+          ))}
+        </div>
       </div>
 
       <div>
@@ -75,12 +102,15 @@ export default function CreateProjectForm() {
           name="technologies"
           type="text"
           required
+          aria-describedby="technologies-error"
           placeholder="React, Next.js, TypeScript"
           className="w-full border rounded p-2"
         />
-        {state.errors?.technologies?.map((error) => (
-          <p key={error} className="text-red-600 text-sm">{error}</p>
-        ))}
+        <div id="technologies-error" aria-live="polite">
+          {state.errors?.technologies?.map((error) => (
+            <p key={error} className="text-red-600 text-sm">{error}</p>
+          ))}
+        </div>
       </div>
 
       <div>
@@ -91,12 +121,15 @@ export default function CreateProjectForm() {
           id="link"
           name="link"
           type="url"
+          aria-describedby="link-error"
           placeholder="https://example.com"
           className="w-full border rounded p-2"
         />
-        {state.errors?.link?.map((error) => (
-          <p key={error} className="text-red-600 text-sm">{error}</p>
-        ))}
+        <div id="link-error" aria-live="polite">
+          {state.errors?.link?.map((error) => (
+            <p key={error} className="text-red-600 text-sm">{error}</p>
+          ))}
+        </div>
       </div>
 
       <button
@@ -111,3 +144,12 @@ export default function CreateProjectForm() {
     </form>
   );
 }
+
+
+/*Nota importante:
+aria-describedby relaciona el campo con el mensaje que lo describe.
+aria-live="polite" permite que las tecnologías de asistencia, como 
+los lectores de pantalla, anuncien los mensajes cuando aparecen, 
+sin interrumpir inmediatamente lo que están leyendo.
+
+*/

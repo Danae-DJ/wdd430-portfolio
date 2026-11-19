@@ -33,6 +33,10 @@ export default async function ProjectsList({
             {project.title}
           </h2>
 
+          <p className="text-sm text-gray-500 mb-3">
+            Year Completed: {project.year_completed ?? 'Not specified'}
+          </p>
+
           <a
             href={`/projects/${project.id}/edit`}
             className="rounded-full border border-green-600 bg-white px-2.5 py-0.5 text-sm font-medium text-green-600 hover:bg-green-50 transition-colors"
